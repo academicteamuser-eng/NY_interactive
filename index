@@ -52,8 +52,8 @@
 
     /* Место для scorm-пакета - пока пустой iframe */
     #scorm-frame {
-      width: 100%;
-      height: 100%;
+      width: 80%;
+      height: 80%;
       border: none;
       border-radius: 15px;
     }
