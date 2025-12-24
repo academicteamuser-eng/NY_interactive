@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>С наступающим Новым годом!</title>
+  <style>
+    /* Цвета градиента */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #d0ebff, #83b3ff, #a0a0a0);
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #003366;
+    }
+
+    /* Заголовок — центр, объемный пушистый шрифт */
+    h1 {
+      margin: 40px 0 30px 0;
+      font-size: 3rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 2px;
+      color: #e0f0ff;
+      /* объемный пушистый эффект */
+      text-shadow:
+        1px 1px 0 #aadaff,
+        2px 2px 0 #81c7ff,
+        3px 3px 4px #4a8ae0,
+        0 0 10px #a1c6ff;
+      user-select: none;
+    }
+
+    /* Контейнер для задания + падающих снежинок */
+    #content-wrapper {
+      position: relative;
+      width: 90vw;
+      max-width: 1000px;
+      height: 600px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Место для scorm-пакета - пока пустой iframe */
+    #scorm-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 15px;
+    }
+
+    /* Контейнер для снежинок слева и справа */
+    .snow-container {
+      position: absolute;
+      top: 0;
+      width: 50px;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    #snow-left {
+      left: 0;
+    }
+    #snow-right {
+      right: 0;
+    }
+
+    /* Снежинка - маленький белый кружок */
+    .snowflake {
+      position: absolute;
+      background: linear-gradient(135deg, #fff, #cce8ff);
+      border-radius: 50%;
+      opacity: 0.8;
+      filter: drop-shadow(0 0 1px #e0eaff);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>С наступающим Новым годом!</h1>
+
+  <div id="content-wrapper">
+    <!-- Левая колонка снежинок -->
+    <div id="snow-left" class="snow-container"></div>
+
+    <!-- Место под scorm задание -->
+    <!-- Замените src на путь к вашему scorm-пакету -->
+    <iframe id="scorm-frame" src="Your_SCORM_Package/index.html" allowfullscreen></iframe>
+
+    <!-- Правая колонка снежинок -->
+    <div id="snow-right" class="snow-container"></div>
+  </div>
+
+<script>
+  // Падающие снежинки по бокам
+
+  class Snowflake {
+    constructor(container, xRange) {
+      this.container = container;
+      this.xRange = xRange; // [min, max] позиция по X в контейнере
+
+      this.snowflake = document.createElement('div');
+      this.snowflake.classList.add('snowflake');
+
+      this.reset();
+
+      this.container.appendChild(this.snowflake);
+    }
+
+    reset() {
+      const size = Math.random() * 6 + 4; // 4-10 px
+      this.snowflake.style.width = size + 'px';
+      this.snowflake.style.height = size + 'px';
+
+      this.x = Math.random() * (this.xRange[1] - this.xRange[0]) + this.xRange[0];
+      this.y = -size; // старт сверху за пределами
+
+      this.speedY = Math.random() * 0.7 + 0.3;
+      this.speedX = (Math.random() - 0.5) * 0.3;
+
+      this.snowflake.style.left = this.x + 'px';
+      this.snowflake.style.top = this.y + 'px';
+      this.snowflake.style.opacity = 0.7 + Math.random() * 0.3;
+    }
+
+    update() {
+      this.y += this.speedY;
+      this.x += this.speedX;
+
+      this.snowflake.style.transform = `translate(${this.x}px, ${this.y}px)`;
+
+      if (this.y > this.container.clientHeight) {
+        this.reset();
+      }
+    }
+  }
+
+  function initSnow(containerId) {
+    const container = document.getElementById(containerId);
+    const snowflakes = [];
+    const count = 30;
+
+    for (let i = 0; i < count; i++) {
+      snowflakes.push(new Snowflake(container, [0, container.clientWidth]));
+    }
+
+    function animate() {
+      snowflakes.forEach(s => s.update());
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  initSnow('snow-left');
+  initSnow('snow-right');
+</script>
+</body>
+</html>
